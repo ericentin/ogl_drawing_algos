@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <ctime>
 #include <cmath>
+#include <sstream>
 
 #include <glut.h>
 
@@ -29,9 +30,11 @@ void swap(GLint& a, GLint& b){
 
 void glutPrint(int x, int y, char *string)
 {
+    glColor3i(0, 0, 0);
     glRasterPos2i(x, y);
-    while(string){
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *string++);
+    while(*string){
+        printf("%c\n", *string);
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *(string++));
     }
 }
 
@@ -111,7 +114,7 @@ void bruteForce(){
     glBegin(GL_POINTS);
     glColor3f(1.0, 0, 0);
     clock_t start = clock();
-    for (int j = 0; j < 1000; j++){
+    for (int j = 0; j < 1; j++){
         GLint dx = 0, dy = 0;
         for (GLint i = 0; i < 11; i++){
             bruteForceLine(-400, 300, -400 + dx, 0);
@@ -126,9 +129,9 @@ void bruteForce(){
         }
     }
     clock_t end = clock();
-    int timeTaken = (float) (end - start) / CLOCKS_PER_SEC * 1000;
-    printf("%i\n", timeTaken);
     glEnd();
+    int timeTaken = (float) (end - start) / CLOCKS_PER_SEC * 1000;
+    glutPrint(-400, -300, "hello");
     glutSwapBuffers();
     glGetError();
 }
@@ -184,7 +187,6 @@ void bresenham(){
     }
     clock_t end = clock();
     int timeTaken = (float) (end - start) / CLOCKS_PER_SEC * 1000;
-    printf("%i\n", timeTaken);
     glEnd();
     glutSwapBuffers();
     glGetError();
