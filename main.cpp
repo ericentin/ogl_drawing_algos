@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cmath>
 #include <sstream>
+#include <iostream>
 
 #include <glut.h>
 
@@ -12,6 +13,9 @@
 #define ELLIPSES 2
 #define CIRCLES 3
 #define OPENGL 4
+
+#define TEXT_X_POSITION -375
+#define TEXT_Y_POSITION -275
 
 void (*drawFunction)() = NULL;
 int mainMenu, linesMenu;
@@ -28,7 +32,7 @@ void swap(GLint& a, GLint& b){
     b = c;
 }
 
-void glutPrint(int x, int y, char *string)
+void glutPrint(int x, int y, const char *string)
 {
     glColor3i(0, 0, 0);
     glRasterPos2i(x, y);
@@ -48,6 +52,7 @@ void glLines(){
     glBegin(GL_LINES);
 	glColor3f(1.0, 0, 0);
     GLint dx = 0, dy = 0;
+    clock_t start = clock();
     for (GLint i = 0; i < 11; i++){
         glLine(-400, 300, -400 + dx, 0);
         glLine(-400, 300, 0, 0 + dy);
@@ -59,7 +64,12 @@ void glLines(){
         glLine(400, -300, 0, -300 + dy);
         dx += 40; dy += 30;
 	}
-	glEnd();
+	clock_t end = clock();
+    glEnd();
+    double timeTaken = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    std::ostringstream buffer;
+    buffer << "OpenGL GL_LINES took " << timeTaken << " ms.\n";
+    glutPrint(TEXT_X_POSITION, TEXT_Y_POSITION, buffer.str().c_str());
     glutSwapBuffers();
 	glGetError();
 }
@@ -130,8 +140,10 @@ void bruteForce(){
     }
     clock_t end = clock();
     glEnd();
-    int timeTaken = (float) (end - start) / CLOCKS_PER_SEC * 1000;
-    glutPrint(-400, -300, "hello");
+    double timeTaken = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    std::ostringstream buffer;
+    buffer << "Brute force took " << timeTaken << " ms.\n";
+    glutPrint(TEXT_X_POSITION, TEXT_Y_POSITION, buffer.str().c_str());
     glutSwapBuffers();
     glGetError();
 }
@@ -171,7 +183,7 @@ void bresenham(){
     glColor3f(1.0, 0, 0);
     
     clock_t start = clock();
-    for (int j = 0; j < 1000; j++){
+    for (int j = 0; j < 1; j++){
         GLint dx = 0, dy = 0;
         for (GLint i = 0; i < 11; i++){
             bresenhamLine(-400, 300, -400 + dx, 0);
@@ -185,9 +197,12 @@ void bresenham(){
             dx += 40; dy += 30;
         }
     }
-    clock_t end = clock();
-    int timeTaken = (float) (end - start) / CLOCKS_PER_SEC * 1000;
     glEnd();
+    clock_t end = clock();
+    double timeTaken = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    std::ostringstream buffer;
+    buffer << "Bresenham took " << timeTaken << " ms.\n";
+    glutPrint(TEXT_X_POSITION, TEXT_Y_POSITION, buffer.str().c_str());
     glutSwapBuffers();
     glGetError();
 }
